@@ -1,0 +1,1650 @@
+{
+	"info": {
+		"_postman_id": "8f883652-3cf7-4f01-b684-2a6c116a8271",
+		"name": "NestJS Portfolio API",
+		"description": "Production-ready Postman collection for the NestJS Clean Architecture Portfolio API.\n\n### Authentication & Environment\n- Collection includes pre-configured collection variables: `baseUrl`, `accessToken`, `refreshToken`, `adminEmail`, and `adminPassword`.\n- Login, Register, and Refresh endpoints include automated test scripts that capture `accessToken` and `refreshToken` and store them in collection variables.\n- Protected endpoints automatically inherit Bearer Token authorization from the collection.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{accessToken}}",
+				"type": "string"
+			}
+		]
+	},
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:3000/api/v1",
+			"type": "string"
+		},
+		{
+			"key": "accessToken",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "refreshToken",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "adminEmail",
+			"value": "alex@example.com",
+			"type": "string"
+		},
+		{
+			"key": "adminPassword",
+			"value": "AdminSecurePass123!",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "Health & Monitoring",
+			"item": [
+				{
+					"name": "System & Database Health Check",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/health",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"health"
+							]
+						},
+						"description": "Performs system liveness and PostgreSQL database connectivity probe check using NestJS Terminus."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Login (Admin / User)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();",
+									"if (jsonData.accessToken) {",
+									"    pm.collectionVariables.set('accessToken', jsonData.accessToken);",
+									"    console.log('Access token updated in collection variables');",
+									"}",
+									"if (jsonData.refreshToken) {",
+									"    pm.collectionVariables.set('refreshToken', jsonData.refreshToken);",
+									"    console.log('Refresh token updated in collection variables');",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"{{adminEmail}}\",\n  \"password\": \"{{adminPassword}}\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						},
+						"description": "Authenticates user credentials and returns JWT access & refresh tokens. Automatically sets `accessToken` and `refreshToken` in collection variables."
+					},
+					"response": []
+				},
+				{
+					"name": "Register User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();",
+									"if (jsonData.accessToken) {",
+									"    pm.collectionVariables.set('accessToken', jsonData.accessToken);",
+									"}",
+									"if (jsonData.refreshToken) {",
+									"    pm.collectionVariables.set('refreshToken', jsonData.refreshToken);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"developer@example.com\",\n  \"password\": \"StrongPass123!\",\n  \"name\": \"Jordan Smith\",\n  \"title\": \"Fullstack Cloud Engineer\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/register",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
+						},
+						"description": "Registers a new user and returns access/refresh JWT tokens."
+					},
+					"response": []
+				},
+				{
+					"name": "Refresh Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();",
+									"if (jsonData.accessToken) {",
+									"    pm.collectionVariables.set('accessToken', jsonData.accessToken);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"refreshToken\": \"{{refreshToken}}\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/refresh",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"refresh"
+							]
+						},
+						"description": "Generates a new access token using a valid refresh token."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Session User (Me)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/auth/me",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"me"
+							]
+						},
+						"description": "Retrieves the session payload of the authenticated JWT token."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Users & Profile",
+			"item": [
+				{
+					"name": "Get Public Owner Profile",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/users/profile/public",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"profile",
+								"public"
+							]
+						},
+						"description": "Retrieves public profile information of the portfolio owner."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Current User Profile",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/users/me",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"me"
+							]
+						},
+						"description": "Retrieves full user entity details of the authenticated user."
+					},
+					"response": []
+				},
+				{
+					"name": "Update Current User Profile",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Alex Morgan\",\n  \"title\": \"Principal Cloud & Backend Architect\",\n  \"bio\": \"Staff/Principal Backend Architect specializing in high-throughput distributed systems, event-driven architectures, and Kubernetes.\",\n  \"location\": \"San Francisco, CA (Remote)\",\n  \"githubUrl\": \"https://github.com/alexmorgan\",\n  \"linkedinUrl\": \"https://linkedin.com/in/alexmorgan\",\n  \"twitterUrl\": \"https://x.com/alexmorgan_dev\",\n  \"websiteUrl\": \"https://alexmorgan.dev\",\n  \"resumeUrl\": \"https://alexmorgan.dev/resume.pdf\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users/me",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"me"
+							]
+						},
+						"description": "Updates current authenticated profile fields."
+					},
+					"response": []
+				},
+				{
+					"name": "Change Password",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"currentPassword\": \"AdminSecurePass123!\",\n  \"newPassword\": \"NewAdminSecurePass123!\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users/me/change-password",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"me",
+								"change-password"
+							]
+						},
+						"description": "Changes the password for the current authenticated account."
+					},
+					"response": []
+				},
+				{
+					"name": "List Users (Admin)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/users?page=1&limit=10&role=USER",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "role",
+									"value": "USER"
+								},
+								{
+									"key": "search",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "isActive",
+									"value": "true",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Paginated list of users with optional filtering (Admin only)."
+					},
+					"response": []
+				},
+				{
+					"name": "Create User (Admin)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"contributor@example.com\",\n  \"password\": \"ContributorPass123!\",\n  \"name\": \"Taylor Swift\",\n  \"title\": \"Cloud Infrastructure Engineer\",\n  \"role\": \"USER\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users"
+							]
+						},
+						"description": "Creates a new user record with role assignment (Admin only)."
+					},
+					"response": []
+				},
+				{
+					"name": "Get User by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/users/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "ENTER_USER_UUID"
+								}
+							]
+						},
+						"description": "Retrieves user details by UUID."
+					},
+					"response": []
+				},
+				{
+					"name": "Update User by ID (Admin)",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"role\": \"ADMIN\",\n  \"isActive\": true\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "ENTER_USER_UUID"
+								}
+							]
+						},
+						"description": "Updates any user by ID (Admin only)."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User by ID (Admin)",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/users/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "ENTER_USER_UUID"
+								}
+							]
+						},
+						"description": "Deletes a user account by UUID (Admin only)."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Projects",
+			"item": [
+				{
+					"name": "List Projects (Public)",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/projects?page=1&limit=10&status=PUBLISHED",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"projects"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "status",
+									"value": "PUBLISHED"
+								},
+								{
+									"key": "category",
+									"value": "BACKEND",
+									"disabled": true
+								},
+								{
+									"key": "featured",
+									"value": "true",
+									"disabled": true
+								},
+								{
+									"key": "search",
+									"value": "Kafka",
+									"disabled": true
+								},
+								{
+									"key": "sortBy",
+									"value": "sortOrder",
+									"disabled": true
+								},
+								{
+									"key": "sortOrder",
+									"value": "asc",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Returns a paginated list of published portfolio projects with filtering by category, featured flag, and search query."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Featured Projects",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/projects/featured",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"projects",
+								"featured"
+							]
+						},
+						"description": "Retrieves the curated list of featured portfolio projects for the homepage showcase."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Project by Slug or ID",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/projects/:slugOrId",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"projects",
+								":slugOrId"
+							],
+							"variable": [
+								{
+									"key": "slugOrId",
+									"value": "distributed-microservices-event-engine",
+									"description": "Slug string or UUID"
+								}
+							]
+						},
+						"description": "Fetches detailed information for a single project and atomically increments its view count."
+					},
+					"response": []
+				},
+				{
+					"name": "Like Project",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/projects/:id/like",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"projects",
+								":id",
+								"like"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "ENTER_PROJECT_UUID"
+								}
+							]
+						},
+						"description": "Increments the like / upvote counter for a project."
+					},
+					"response": []
+				},
+				{
+					"name": "Create Project (Admin)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"NextGen AI Workflow Automation Engine\",\n  \"slug\": \"nextgen-ai-workflow-automation-engine\",\n  \"summary\": \"High-performance agentic AI orchestration engine built with NestJS, Redis, and LangChain.\",\n  \"description\": \"# NextGen AI Automation Engine\\n\\nDecoupled agentic workflow orchestrator capable of concurrent LLM execution pipelines.\",\n  \"thumbnailUrl\": \"https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800\",\n  \"bannerUrl\": \"https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=1200\",\n  \"liveDemoUrl\": \"https://ai.example.com\",\n  \"repoUrl\": \"https://github.com/alexmorgan/ai-engine\",\n  \"featured\": true,\n  \"status\": \"PUBLISHED\",\n  \"category\": \"AI_ML\",\n  \"sortOrder\": 6,\n  \"startedAt\": \"2025-06-01T00:00:00.000Z\",\n  \"completedAt\": \"2025-11-01T00:00:00.000Z\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/projects",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"projects"
+							]
+						},
+						"description": "Creates a new showcase project (Admin only)."
+					},
+					"response": []
+				},
+				{
+					"name": "Update Project (Admin)",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"featured\": true,\n  \"summary\": \"Updated summary for the project showcase.\",\n  \"sortOrder\": 1\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/projects/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"projects",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "ENTER_PROJECT_UUID"
+								}
+							]
+						},
+						"description": "Updates an existing project by ID (Admin only)."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Project (Admin)",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/projects/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"projects",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "ENTER_PROJECT_UUID"
+								}
+							]
+						},
+						"description": "Deletes a project by ID (Admin only)."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Technical Skills",
+			"item": [
+				{
+					"name": "Get Skills Grouped by Category",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/skills/grouped",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"skills",
+								"grouped"
+							]
+						},
+						"description": "Returns all skills grouped by category (Languages, Backend Frameworks, Databases, DevOps & Cloud, etc.)."
+					},
+					"response": []
+				},
+				{
+					"name": "List Skills Paginated",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/skills?page=1&limit=20",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"skills"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "20"
+								},
+								{
+									"key": "category",
+									"value": "DATABASES",
+									"disabled": true
+								},
+								{
+									"key": "isFeatured",
+									"value": "true",
+									"disabled": true
+								},
+								{
+									"key": "search",
+									"value": "Postgre",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Paginated skill catalog with optional category and keyword filters."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Skill by ID",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/skills/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"skills",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "ENTER_SKILL_UUID"
+								}
+							]
+						},
+						"description": "Retrieves single skill details."
+					},
+					"response": []
+				},
+				{
+					"name": "Create Skill (Admin)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Rust\",\n  \"category\": \"LANGUAGES\",\n  \"proficiency\": 85,\n  \"yearsOfExperience\": 3.0,\n  \"iconUrl\": \"https://cdn.example.com/icons/rust.svg\",\n  \"isFeatured\": true,\n  \"sortOrder\": 6\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/skills",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"skills"
+							]
+						},
+						"description": "Creates a new skill record (Admin only)."
+					},
+					"response": []
+				},
+				{
+					"name": "Update Skill (Admin)",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"proficiency\": 99,\n  \"yearsOfExperience\": 8.5,\n  \"isFeatured\": true\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/skills/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"skills",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "ENTER_SKILL_UUID"
+								}
+							]
+						},
+						"description": "Updates a skill by ID (Admin only)."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Skill (Admin)",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/skills/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"skills",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "ENTER_SKILL_UUID"
+								}
+							]
+						},
+						"description": "Deletes a skill by ID (Admin only)."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Experiences & Career",
+			"item": [
+				{
+					"name": "List Work Experiences (Public)",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/experiences?page=1&limit=10",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"experiences"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								}
+							]
+						},
+						"description": "Returns work career history ordered chronologically."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Experience by ID",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/experiences/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"experiences",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "ENTER_EXPERIENCE_UUID"
+								}
+							]
+						},
+						"description": "Retrieves single experience details."
+					},
+					"response": []
+				},
+				{
+					"name": "Create Work Experience (Admin)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"company\": \"Stripe\",\n  \"position\": \"Staff Backend Infrastructure Engineer\",\n  \"location\": \"San Francisco, CA (Remote)\",\n  \"employmentType\": \"FULL_TIME\",\n  \"startDate\": \"2023-01-01T00:00:00.000Z\",\n  \"isCurrent\": true,\n  \"description\": \"Lead architect for global payments distributed event pipeline and high-throughput ledger services.\",\n  \"highlights\": [\n    \"Designed idempotent ledger settlement service handling 50k transactions/sec.\",\n    \"Spearheaded migration to multi-region active-active PostgreSQL database clustering.\"\n  ],\n  \"companyUrl\": \"https://stripe.com\",\n  \"companyLogoUrl\": \"https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=200\",\n  \"technologies\": [\"NestJS\", \"Go\", \"PostgreSQL\", \"Kafka\", \"Kubernetes\", \"AWS\"],\n  \"sortOrder\": 1\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/experiences",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"experiences"
+							]
+						},
+						"description": "Adds a work experience item (Admin only)."
+					},
+					"response": []
+				},
+				{
+					"name": "Update Work Experience (Admin)",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"position\": \"Principal Backend Architect\",\n  \"sortOrder\": 1\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/experiences/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"experiences",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "ENTER_EXPERIENCE_UUID"
+								}
+							]
+						},
+						"description": "Updates an existing experience record (Admin only)."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Work Experience (Admin)",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/experiences/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"experiences",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "ENTER_EXPERIENCE_UUID"
+								}
+							]
+						},
+						"description": "Deletes a work experience by ID (Admin only)."
+					},
+					"response": []
+				},
+				{
+					"name": "List Education History (Public)",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/experiences/education",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"experiences",
+								"education"
+							]
+						},
+						"description": "Returns academic qualifications and degrees."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Education by ID",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/experiences/education/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"experiences",
+								"education",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "ENTER_EDUCATION_UUID"
+								}
+							]
+						},
+						"description": "Retrieves education milestone details."
+					},
+					"response": []
+				},
+				{
+					"name": "Create Education (Admin)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"institution\": \"Stanford University\",\n  \"degree\": \"Master of Science\",\n  \"fieldOfStudy\": \"Computer Science (Distributed Systems)\",\n  \"startDate\": \"2019-09-01T00:00:00.000Z\",\n  \"endDate\": \"2021-06-15T00:00:00.000Z\",\n  \"isCurrent\": false,\n  \"grade\": \"3.95 / 4.0\",\n  \"description\": \"Research focused on distributed consensus protocols (Raft, Paxos) and cloud-native databases.\",\n  \"credentialUrl\": \"https://stanford.edu/verify/12345\",\n  \"sortOrder\": 1\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/experiences/education",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"experiences",
+								"education"
+							]
+						},
+						"description": "Creates an education record (Admin only)."
+					},
+					"response": []
+				},
+				{
+					"name": "Update Education (Admin)",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"grade\": \"4.0 / 4.0\",\n  \"sortOrder\": 1\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/experiences/education/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"experiences",
+								"education",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "ENTER_EDUCATION_UUID"
+								}
+							]
+						},
+						"description": "Updates an education record (Admin only)."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Education (Admin)",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/experiences/education/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"experiences",
+								"education",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "ENTER_EDUCATION_UUID"
+								}
+							]
+						},
+						"description": "Deletes an education record by ID (Admin only)."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Technical Articles",
+			"item": [
+				{
+					"name": "List Articles (Public)",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/articles?page=1&limit=10&isPublished=true",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"articles"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "isPublished",
+									"value": "true"
+								},
+								{
+									"key": "tag",
+									"value": "Distributed Systems",
+									"disabled": true
+								},
+								{
+									"key": "search",
+									"value": "Kafka",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Returns paginated list of published technical articles and architecture breakdowns."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Article by Slug or ID",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/articles/:slugOrId",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"articles",
+								":slugOrId"
+							],
+							"variable": [
+								{
+									"key": "slugOrId",
+									"value": "designing-resilient-distributed-systems-nestjs-kafka",
+									"description": "Slug string or UUID"
+								}
+							]
+						},
+						"description": "Retrieves full markdown content of an article and automatically increments view count."
+					},
+					"response": []
+				},
+				{
+					"name": "Create Article (Admin)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"Architecting High-Throughput Microservices with NestJS 11\",\n  \"slug\": \"architecting-high-throughput-microservices-nestjs-11\",\n  \"summary\": \"A comprehensive look at building resilient, decoupled backends with NestJS, Kafka, and PostgreSQL.\",\n  \"content\": \"# Architecting High-Throughput Microservices\\n\\nIn this guide, we explore Clean Architecture, Inversion of Control, and event streaming patterns in modern TypeScript backends.\",\n  \"coverImageUrl\": \"https://images.unsplash.com/photo-1518770660439-4636190af475?w=1200\",\n  \"tags\": [\"NestJS\", \"TypeScript\", \"Microservices\", \"Architecture\"],\n  \"readingTimeMinutes\": 8,\n  \"isPublished\": true,\n  \"publishedAt\": \"2026-03-01T10:00:00.000Z\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/articles",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"articles"
+							]
+						},
+						"description": "Publishes a new technical article (Admin only)."
+					},
+					"response": []
+				},
+				{
+					"name": "Update Article (Admin)",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"isPublished\": true,\n  \"readingTimeMinutes\": 10\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/articles/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"articles",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "ENTER_ARTICLE_UUID"
+								}
+							]
+						},
+						"description": "Updates an article by ID (Admin only)."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Article (Admin)",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/articles/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"articles",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "ENTER_ARTICLE_UUID"
+								}
+							]
+						},
+						"description": "Deletes an article by ID (Admin only)."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Contact & Inquiries",
+			"item": [
+				{
+					"name": "Submit Contact Message (Public)",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Sarah Jenkins\",\n  \"email\": \"sarah.jenkins@techrecruiter.com\",\n  \"subject\": \"Principal Infrastructure Role Inquiry\",\n  \"message\": \"Hi Alex, our engineering leadership team reviewed your distributed event engine project and would love to connect about our Principal Infrastructure position.\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/contact",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"contact"
+							]
+						},
+						"description": "Allows public visitors and recruiters to submit inquiry messages."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Unread Inquiries Count (Admin)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/contact/unread-count",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"contact",
+								"unread-count"
+							]
+						},
+						"description": "Returns total count of unread visitor inquiries (Admin only)."
+					},
+					"response": []
+				},
+				{
+					"name": "List Inquiries (Admin)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/contact?page=1&limit=10&status=UNREAD",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"contact"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "status",
+									"value": "UNREAD"
+								},
+								{
+									"key": "search",
+									"value": "",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Paginated inbox of contact inquiries with status filter (UNREAD, READ, REPLIED, ARCHIVED, SPAM) (Admin only)."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Inquiry by ID (Admin)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/contact/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"contact",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "ENTER_CONTACT_UUID"
+								}
+							]
+						},
+						"description": "Retrieves inquiry details by ID (Admin only)."
+					},
+					"response": []
+				},
+				{
+					"name": "Update Inquiry Status & Notes (Admin)",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"status\": \"REPLIED\",\n  \"notes\": \"Scheduled intro technical discussion for next Tuesday.\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/contact/:id/status",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"contact",
+								":id",
+								"status"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "ENTER_CONTACT_UUID"
+								}
+							]
+						},
+						"description": "Updates inquiry status (UNREAD, READ, REPLIED, ARCHIVED, SPAM) and internal notes (Admin only)."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Inquiry (Admin)",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/contact/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"contact",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "ENTER_CONTACT_UUID"
+								}
+							]
+						},
+						"description": "Deletes an inquiry by ID (Admin only)."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Analytics & Telemetry",
+			"item": [
+				{
+					"name": "Track Visitor Event (Public)",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"type\": \"PAGE_VIEW\",\n  \"identifier\": \"/projects/distributed-microservices-event-engine\",\n  \"referrer\": \"https://github.com/alexmorgan\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/analytics/track",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"analytics",
+								"track"
+							]
+						},
+						"description": "Records telemetry event (PAGE_VIEW, RESUME_DOWNLOAD, PROJECT_CLICK, SOCIAL_CLICK)."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Analytics Overview (Admin)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/analytics/overview",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"analytics",
+								"overview"
+							]
+						},
+						"description": "Retrieves aggregated counts of total page views, resume downloads, project clicks, total projects/articles, and 7-day trend breakdown (Admin only)."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Raw Telemetry Logs (Admin)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/analytics/metrics?page=1&limit=50",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"analytics",
+								"metrics"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "50"
+								},
+								{
+									"key": "type",
+									"value": "PAGE_VIEW",
+									"disabled": true
+								},
+								{
+									"key": "identifier",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "startDate",
+									"value": "2026-01-01T00:00:00.000Z",
+									"disabled": true
+								},
+								{
+									"key": "endDate",
+									"value": "2026-12-31T23:59:59.000Z",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Paginated telemetry stream logs (Admin only)."
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

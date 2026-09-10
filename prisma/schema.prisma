@@ -1,0 +1,245 @@
+generator client {
+  provider     = "prisma-client"
+  output       = "../src/database/generated/prisma"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  ADMIN
+  USER
+  GUEST
+}
+
+enum ProjectStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum ProjectCategory {
+  FULLSTACK
+  BACKEND
+  FRONTEND
+  MOBILE
+  DEVOPS
+  AI_ML
+  SYSTEMS
+  OPEN_SOURCE
+}
+
+enum SkillCategory {
+  LANGUAGES
+  BACKEND_FRAMEWORKS
+  FRONTEND_FRAMEWORKS
+  DATABASES
+  DEVOPS_CLOUD
+  TOOLS_ARCHITECTURE
+  TESTING_SECURITY
+}
+
+enum EmploymentType {
+  FULL_TIME
+  PART_TIME
+  CONTRACT
+  FREELANCE
+  INTERNSHIP
+  SELF_EMPLOYED
+}
+
+enum ContactStatus {
+  UNREAD
+  READ
+  REPLIED
+  ARCHIVED
+  SPAM
+}
+
+enum MetricType {
+  PAGE_VIEW
+  RESUME_DOWNLOAD
+  PROJECT_CLICK
+  SOCIAL_CLICK
+}
+
+model User {
+  id           String    @id @default(uuid())
+  email        String    @unique
+  passwordHash String    @map("password_hash")
+  name         String
+  title        String?   @default("Senior Backend & Cloud Architect")
+  bio          String?
+  avatarUrl    String?   @map("avatar_url")
+  location     String?
+  githubUrl    String?   @map("github_url")
+  linkedinUrl  String?   @map("linkedin_url")
+  twitterUrl   String?   @map("twitter_url")
+  websiteUrl   String?   @map("website_url")
+  resumeUrl    String?   @map("resume_url")
+  role         Role      @default(USER)
+  isActive     Boolean   @default(true) @map("is_active")
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
+
+  articles     Article[]
+
+  @@map("users")
+}
+
+model Project {
+  id           String          @id @default(uuid())
+  title        String
+  slug         String          @unique
+  summary      String
+  description  String
+  thumbnailUrl String?         @map("thumbnail_url")
+  bannerUrl    String?         @map("banner_url")
+  liveDemoUrl  String?         @map("live_demo_url")
+  repoUrl      String?         @map("repo_url")
+  featured     Boolean         @default(false)
+  status       ProjectStatus   @default(PUBLISHED)
+  category     ProjectCategory @default(FULLSTACK)
+  sortOrder    Int             @default(0) @map("sort_order")
+  viewsCount   Int             @default(0) @map("views_count")
+  likesCount   Int             @default(0) @map("likes_count")
+  startedAt    DateTime?       @map("started_at")
+  completedAt  DateTime?       @map("completed_at")
+  createdAt    DateTime        @default(now()) @map("created_at")
+  updatedAt    DateTime        @updatedAt @map("updated_at")
+
+  technologies ProjectSkill[]
+
+  @@index([slug])
+  @@index([category])
+  @@index([status])
+  @@index([featured])
+  @@map("projects")
+}
+
+model Skill {
+  id                String        @id @default(uuid())
+  name              String        @unique
+  category          SkillCategory @default(BACKEND_FRAMEWORKS)
+  proficiency       Int           @default(80)
+  yearsOfExperience Float         @default(1.0) @map("years_of_experience")
+  iconUrl           String?       @map("icon_url")
+  isFeatured        Boolean       @default(false) @map("is_featured")
+  sortOrder         Int           @default(0) @map("sort_order")
+  createdAt         DateTime      @default(now()) @map("created_at")
+  updatedAt         DateTime      @updatedAt @map("updated_at")
+
+  projects          ProjectSkill[]
+
+  @@index([category])
+  @@index([isFeatured])
+  @@map("skills")
+}
+
+model ProjectSkill {
+  projectId String   @map("project_id")
+  skillId   String   @map("skill_id")
+  isPrimary Boolean  @default(false) @map("is_primary")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  skill     Skill    @relation(fields: [skillId], references: [id], onDelete: Cascade)
+
+  @@id([projectId, skillId])
+  @@map("project_skills")
+}
+
+model Experience {
+  id             String         @id @default(uuid())
+  company        String
+  position       String
+  location       String?
+  employmentType EmploymentType @default(FULL_TIME) @map("employment_type")
+  startDate      DateTime       @map("start_date")
+  endDate        DateTime?      @map("end_date")
+  isCurrent      Boolean        @default(false) @map("is_current")
+  description    String
+  highlights     String[]       @default([])
+  companyUrl     String?        @map("company_url")
+  companyLogoUrl String?        @map("company_logo_url")
+  technologies   String[]       @default([])
+  sortOrder      Int            @default(0) @map("sort_order")
+  createdAt      DateTime       @default(now()) @map("created_at")
+  updatedAt      DateTime       @updatedAt @map("updated_at")
+
+  @@map("experiences")
+}
+
+model Education {
+  id            String    @id @default(uuid())
+  institution   String
+  degree        String
+  fieldOfStudy  String?   @map("field_of_study")
+  startDate     DateTime  @map("start_date")
+  endDate       DateTime? @map("end_date")
+  isCurrent     Boolean   @default(false) @map("is_current")
+  grade         String?
+  description   String?
+  credentialUrl String?   @map("credential_url")
+  sortOrder     Int       @default(0) @map("sort_order")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+
+  @@map("educations")
+}
+
+model ContactMessage {
+  id        String        @id @default(uuid())
+  name      String
+  email     String
+  subject   String
+  message   String
+  ipAddress String?       @map("ip_address")
+  userAgent String?       @map("user_agent")
+  status    ContactStatus @default(UNREAD)
+  notes     String?
+  createdAt DateTime      @default(now()) @map("created_at")
+  updatedAt DateTime      @updatedAt @map("updated_at")
+
+  @@index([status])
+  @@index([createdAt])
+  @@map("contact_messages")
+}
+
+model Article {
+  id                 String    @id @default(uuid())
+  title              String
+  slug               String    @unique
+  summary            String
+  content            String
+  coverImageUrl      String?   @map("cover_image_url")
+  tags               String[]  @default([])
+  readingTimeMinutes Int       @default(5) @map("reading_time_minutes")
+  isPublished        Boolean   @default(false) @map("is_published")
+  publishedAt        DateTime? @map("published_at")
+  viewsCount         Int       @default(0) @map("views_count")
+  authorId           String    @map("author_id")
+  createdAt          DateTime  @default(now()) @map("created_at")
+  updatedAt          DateTime  @updatedAt @map("updated_at")
+
+  author             User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  @@index([slug])
+  @@index([isPublished])
+  @@map("articles")
+}
+
+model AnalyticsMetric {
+  id         String     @id @default(uuid())
+  type       MetricType @default(PAGE_VIEW)
+  identifier String?
+  referrer   String?
+  userAgent  String?    @map("user_agent")
+  createdAt  DateTime   @default(now()) @map("created_at")
+
+  @@index([type])
+  @@index([createdAt])
+  @@map("analytics_metrics")
+}
