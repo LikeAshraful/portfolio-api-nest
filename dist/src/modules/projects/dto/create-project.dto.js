@@ -20,7 +20,10 @@ class ProjectSkillDto {
 }
 exports.ProjectSkillDto = ProjectSkillDto;
 __decorate([
-    (0, swagger_1.ApiProperty)({ example: '123e4567-e89b-12d3-a456-426614174000', description: 'UUID of the Skill' }),
+    (0, swagger_1.ApiProperty)({
+        example: '123e4567-e89b-12d3-a456-426614174000',
+        description: 'UUID of the Skill',
+    }),
     (0, class_validator_1.IsUUID)(),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
@@ -65,25 +68,33 @@ __decorate([
     __metadata("design:type", String)
 ], CreateProjectDto.prototype, "slug", void 0);
 __decorate([
-    (0, swagger_1.ApiProperty)({ example: 'High-throughput event streaming platform with Kafka and NestJS' }),
+    (0, swagger_1.ApiProperty)({
+        example: 'High-throughput event streaming platform with Kafka and NestJS',
+    }),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
 ], CreateProjectDto.prototype, "summary", void 0);
 __decorate([
-    (0, swagger_1.ApiProperty)({ example: '# Distributed Event Engine\n\nArchitecture details...' }),
+    (0, swagger_1.ApiProperty)({
+        example: '# Distributed Event Engine\n\nArchitecture details...',
+    }),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
 ], CreateProjectDto.prototype, "description", void 0);
 __decorate([
-    (0, swagger_1.ApiPropertyOptional)({ example: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31' }),
+    (0, swagger_1.ApiPropertyOptional)({
+        example: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31',
+    }),
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsUrl)(),
     __metadata("design:type", String)
 ], CreateProjectDto.prototype, "thumbnailUrl", void 0);
 __decorate([
-    (0, swagger_1.ApiPropertyOptional)({ example: 'https://images.unsplash.com/photo-1518770660439-4636190af475' }),
+    (0, swagger_1.ApiPropertyOptional)({
+        example: 'https://images.unsplash.com/photo-1518770660439-4636190af475',
+    }),
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsUrl)(),
     __metadata("design:type", String)
@@ -95,7 +106,9 @@ __decorate([
     __metadata("design:type", String)
 ], CreateProjectDto.prototype, "liveDemoUrl", void 0);
 __decorate([
-    (0, swagger_1.ApiPropertyOptional)({ example: 'https://github.com/alexmorgan/event-engine' }),
+    (0, swagger_1.ApiPropertyOptional)({
+        example: 'https://github.com/alexmorgan/event-engine',
+    }),
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsUrl)(),
     __metadata("design:type", String)
@@ -107,13 +120,19 @@ __decorate([
     __metadata("design:type", Boolean)
 ], CreateProjectDto.prototype, "featured", void 0);
 __decorate([
-    (0, swagger_1.ApiPropertyOptional)({ enum: enums_1.ProjectStatus, default: enums_1.ProjectStatus.PUBLISHED }),
+    (0, swagger_1.ApiPropertyOptional)({
+        enum: enums_1.ProjectStatus,
+        default: enums_1.ProjectStatus.PUBLISHED,
+    }),
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsEnum)(enums_1.ProjectStatus),
     __metadata("design:type", String)
 ], CreateProjectDto.prototype, "status", void 0);
 __decorate([
-    (0, swagger_1.ApiPropertyOptional)({ enum: enums_1.ProjectCategory, default: enums_1.ProjectCategory.BACKEND }),
+    (0, swagger_1.ApiPropertyOptional)({
+        enum: enums_1.ProjectCategory,
+        default: enums_1.ProjectCategory.BACKEND,
+    }),
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsEnum)(enums_1.ProjectCategory),
     __metadata("design:type", String)
@@ -137,7 +156,10 @@ __decorate([
     __metadata("design:type", String)
 ], CreateProjectDto.prototype, "completedAt", void 0);
 __decorate([
-    (0, swagger_1.ApiPropertyOptional)({ type: [ProjectSkillDto], description: 'Associated skills/technologies' }),
+    (0, swagger_1.ApiPropertyOptional)({
+        type: [ProjectSkillDto],
+        description: 'Associated skills/technologies',
+    }),
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsArray)(),
     (0, class_validator_1.ValidateNested)({ each: true }),

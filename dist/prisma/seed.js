@@ -476,14 +476,7 @@ A multi-vendor e-commerce platform built for high reliability, fast checkout, an
             sortOrder: 4,
             viewsCount: 2100,
             likesCount: 115,
-            skills: [
-                'PHP',
-                'Laravel',
-                'Vue.js',
-                'MySQL',
-                'Tailwind CSS',
-                'Docker',
-            ],
+            skills: ['PHP', 'Laravel', 'Vue.js', 'MySQL', 'Tailwind CSS', 'Docker'],
         },
         {
             title: 'Automated Asynchronous Notification & SMS Gateway Service',

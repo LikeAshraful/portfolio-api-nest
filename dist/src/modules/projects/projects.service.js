@@ -29,7 +29,9 @@ let ProjectsService = class ProjectsService {
             .replace(/^-+|-+$/g, '');
     }
     async create(dto) {
-        const slug = dto.slug ? this.generateSlug(dto.slug) : this.generateSlug(dto.title);
+        const slug = dto.slug
+            ? this.generateSlug(dto.slug)
+            : this.generateSlug(dto.title);
         const existing = await this.projectRepository.findBySlug(slug);
         if (existing) {
             throw new common_1.ConflictException(`Project with slug "${slug}" already exists`);
@@ -90,7 +92,11 @@ let ProjectsService = class ProjectsService {
         await this.findById(id);
         let slug = undefined;
         if (dto.slug || dto.title) {
-            slug = dto.slug ? this.generateSlug(dto.slug) : dto.title ? this.generateSlug(dto.title) : undefined;
+            slug = dto.slug
+                ? this.generateSlug(dto.slug)
+                : dto.title
+                    ? this.generateSlug(dto.title)
+                    : undefined;
             if (slug) {
                 const existing = await this.projectRepository.findBySlug(slug);
                 if (existing && existing.id !== id) {

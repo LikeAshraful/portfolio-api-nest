@@ -13,10 +13,16 @@ import {
   IsUUID,
   ValidateNested,
 } from 'class-validator';
-import { ProjectCategory, ProjectStatus } from '../../../database/generated/prisma/enums';
+import {
+  ProjectCategory,
+  ProjectStatus,
+} from '../../../database/generated/prisma/enums';
 
 export class ProjectSkillDto {
-  @ApiProperty({ example: '123e4567-e89b-12d3-a456-426614174000', description: 'UUID of the Skill' })
+  @ApiProperty({
+    example: '123e4567-e89b-12d3-a456-426614174000',
+    description: 'UUID of the Skill',
+  })
   @IsUUID()
   @IsNotEmpty()
   skillId: string;
@@ -41,22 +47,30 @@ export class CreateProjectDto {
   @IsString()
   slug?: string;
 
-  @ApiProperty({ example: 'High-throughput event streaming platform with Kafka and NestJS' })
+  @ApiProperty({
+    example: 'High-throughput event streaming platform with Kafka and NestJS',
+  })
   @IsString()
   @IsNotEmpty()
   summary: string;
 
-  @ApiProperty({ example: '# Distributed Event Engine\n\nArchitecture details...' })
+  @ApiProperty({
+    example: '# Distributed Event Engine\n\nArchitecture details...',
+  })
   @IsString()
   @IsNotEmpty()
   description: string;
 
-  @ApiPropertyOptional({ example: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31' })
+  @ApiPropertyOptional({
+    example: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31',
+  })
   @IsOptional()
   @IsUrl()
   thumbnailUrl?: string;
 
-  @ApiPropertyOptional({ example: 'https://images.unsplash.com/photo-1518770660439-4636190af475' })
+  @ApiPropertyOptional({
+    example: 'https://images.unsplash.com/photo-1518770660439-4636190af475',
+  })
   @IsOptional()
   @IsUrl()
   bannerUrl?: string;
@@ -66,7 +80,9 @@ export class CreateProjectDto {
   @IsUrl()
   liveDemoUrl?: string;
 
-  @ApiPropertyOptional({ example: 'https://github.com/alexmorgan/event-engine' })
+  @ApiPropertyOptional({
+    example: 'https://github.com/alexmorgan/event-engine',
+  })
   @IsOptional()
   @IsUrl()
   repoUrl?: string;
@@ -76,12 +92,18 @@ export class CreateProjectDto {
   @IsBoolean()
   featured?: boolean;
 
-  @ApiPropertyOptional({ enum: ProjectStatus, default: ProjectStatus.PUBLISHED })
+  @ApiPropertyOptional({
+    enum: ProjectStatus,
+    default: ProjectStatus.PUBLISHED,
+  })
   @IsOptional()
   @IsEnum(ProjectStatus)
   status?: ProjectStatus;
 
-  @ApiPropertyOptional({ enum: ProjectCategory, default: ProjectCategory.BACKEND })
+  @ApiPropertyOptional({
+    enum: ProjectCategory,
+    default: ProjectCategory.BACKEND,
+  })
   @IsOptional()
   @IsEnum(ProjectCategory)
   category?: ProjectCategory;
@@ -101,7 +123,10 @@ export class CreateProjectDto {
   @IsDateString()
   completedAt?: string;
 
-  @ApiPropertyOptional({ type: [ProjectSkillDto], description: 'Associated skills/technologies' })
+  @ApiPropertyOptional({
+    type: [ProjectSkillDto],
+    description: 'Associated skills/technologies',
+  })
   @IsOptional()
   @IsArray()
   @ValidateNested({ each: true })

@@ -7,7 +7,10 @@ import {
 import { PaginatedResult } from '../../common/dto';
 import { CreateProjectDto, ProjectQueryDto, UpdateProjectDto } from './dto';
 import { ProjectEntity } from './entities/project.entity';
-import { IProjectRepository, PROJECT_REPOSITORY } from './interfaces/project-repository.interface';
+import {
+  IProjectRepository,
+  PROJECT_REPOSITORY,
+} from './interfaces/project-repository.interface';
 
 @Injectable()
 export class ProjectsService {
@@ -26,7 +29,9 @@ export class ProjectsService {
   }
 
   async create(dto: CreateProjectDto): Promise<ProjectEntity> {
-    const slug = dto.slug ? this.generateSlug(dto.slug) : this.generateSlug(dto.title);
+    const slug = dto.slug
+      ? this.generateSlug(dto.slug)
+      : this.generateSlug(dto.title);
 
     const existing = await this.projectRepository.findBySlug(slug);
     if (existing) {
@@ -72,9 +77,10 @@ export class ProjectsService {
   }
 
   async findBySlugOrId(identifier: string): Promise<ProjectEntity> {
-    const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
-      identifier,
-    );
+    const isUuid =
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+        identifier,
+      );
 
     const project = isUuid
       ? await this.projectRepository.findById(identifier)
@@ -90,7 +96,9 @@ export class ProjectsService {
     return project;
   }
 
-  async findAll(query: ProjectQueryDto): Promise<PaginatedResult<ProjectEntity>> {
+  async findAll(
+    query: ProjectQueryDto,
+  ): Promise<PaginatedResult<ProjectEntity>> {
     return this.projectRepository.findAll(query);
   }
 
@@ -103,11 +111,17 @@ export class ProjectsService {
 
     let slug: string | undefined = undefined;
     if (dto.slug || dto.title) {
-      slug = dto.slug ? this.generateSlug(dto.slug) : dto.title ? this.generateSlug(dto.title) : undefined;
+      slug = dto.slug
+        ? this.generateSlug(dto.slug)
+        : dto.title
+          ? this.generateSlug(dto.title)
+          : undefined;
       if (slug) {
         const existing = await this.projectRepository.findBySlug(slug);
         if (existing && existing.id !== id) {
-          throw new ConflictException(`Project with slug "${slug}" already exists`);
+          throw new ConflictException(
+            `Project with slug "${slug}" already exists`,
+          );
         }
       }
     }

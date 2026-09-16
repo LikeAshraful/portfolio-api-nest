@@ -60,7 +60,9 @@ async function main() {
       isActive: true,
     },
   });
-  console.log(`✅ Seeded owner user: ${owner.name} <${owner.email}> (${owner.id})`);
+  console.log(
+    `✅ Seeded owner user: ${owner.name} <${owner.email}> (${owner.id})`,
+  );
 
   // 2. Seed Skills
   const skillsData = [
@@ -484,14 +486,7 @@ A multi-vendor e-commerce platform built for high reliability, fast checkout, an
       sortOrder: 4,
       viewsCount: 2100,
       likesCount: 115,
-      skills: [
-        'PHP',
-        'Laravel',
-        'Vue.js',
-        'MySQL',
-        'Tailwind CSS',
-        'Docker',
-      ],
+      skills: ['PHP', 'Laravel', 'Vue.js', 'MySQL', 'Tailwind CSS', 'Docker'],
     },
     {
       title: 'Automated Asynchronous Notification & SMS Gateway Service',
@@ -714,7 +709,8 @@ A microservice engineered to handle multi-provider SMS dispatching, transactiona
   const educationData = [
     {
       institution: 'University of Information Technology & Sciences (UITS)',
-      degree: 'Bachelor of Science in Computer Science & Engineering (B.Sc. in CSE)',
+      degree:
+        'Bachelor of Science in Computer Science & Engineering (B.Sc. in CSE)',
       fieldOfStudy: 'Computer Science & Software Engineering',
       startDate: new Date('2011-01-01'),
       endDate: new Date('2015-12-31'),
@@ -745,7 +741,8 @@ A microservice engineered to handle multi-provider SMS dispatching, transactiona
   // 6. Seed Articles
   const articlesData = [
     {
-      title: 'Architecting Scalable Multi-Tenant ERP Systems with Laravel and MySQL',
+      title:
+        'Architecting Scalable Multi-Tenant ERP Systems with Laravel and MySQL',
       slug: 'architecting-scalable-multi-tenant-erp-systems-laravel-mysql',
       summary:
         'A comprehensive guide on building scalable, multi-branch ERP solutions using the Repository pattern, database partitioning, and Redis-driven queue workers.',
@@ -797,7 +794,8 @@ By combining strict architectural patterns, query optimization, and decoupled ba
       authorId: owner.id,
     },
     {
-      title: 'High-Concurrency Caching and Query Optimization in Digital Media Portals',
+      title:
+        'High-Concurrency Caching and Query Optimization in Digital Media Portals',
       slug: 'high-concurrency-caching-query-optimization-media-portals',
       summary:
         'Lessons learned scaling high-traffic news platforms like Barta24 to millions of monthly readers using Redis multi-tier caching and SQL index tuning.',
