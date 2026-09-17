@@ -80,7 +80,9 @@ let AuthService = class AuthService {
         try {
             const secret = this.configService.get('JWT_SECRET') ||
                 'super-secret-jwt-portfolio-key-change-in-production-2026';
-            const payload = this.jwtService.verify(refreshToken, { secret });
+            const payload = this.jwtService.verify(refreshToken, {
+                secret,
+            });
             const user = await this.usersService.findById(payload.sub);
             if (!user || !user.isActive) {
                 throw new common_1.UnauthorizedException('User no longer exists or is inactive');
@@ -95,8 +97,12 @@ let AuthService = class AuthService {
         const payload = { sub: userId, email, role };
         const expiresInString = this.configService.get('JWT_EXPIRES_IN') || '7d';
         const expiresInSeconds = 7 * 24 * 60 * 60;
-        const accessToken = this.jwtService.sign(payload, { expiresIn: '1d' });
-        const refreshToken = this.jwtService.sign(payload, { expiresIn: expiresInString });
+        const accessToken = this.jwtService.sign(payload, {
+            expiresIn: '1d',
+        });
+        const refreshToken = this.jwtService.sign(payload, {
+            expiresIn: expiresInString,
+        });
         const user = await this.usersService.findById(userId);
         return {
             accessToken,

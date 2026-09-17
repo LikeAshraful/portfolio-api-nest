@@ -1,7 +1,4 @@
-import {
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
@@ -48,7 +45,9 @@ export class AuthService {
         this.configService.get<string>('JWT_SECRET') ||
         'super-secret-jwt-portfolio-key-change-in-production-2026';
 
-      const payload = this.jwtService.verify<JwtPayload>(refreshToken, { secret });
+      const payload = this.jwtService.verify<JwtPayload>(refreshToken, {
+        secret,
+      });
       const user = await this.usersService.findById(payload.sub);
 
       if (!user || !user.isActive) {
@@ -68,13 +67,18 @@ export class AuthService {
   ): Promise<AuthResponseDto> {
     const payload: JwtPayload = { sub: userId, email, role };
 
-    const expiresInString = this.configService.get<string>('JWT_EXPIRES_IN') || '7d';
+    const expiresInString =
+      this.configService.get<string>('JWT_EXPIRES_IN') || '7d';
     const expiresInSeconds = 7 * 24 * 60 * 60; // 7 days in seconds
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const accessToken = this.jwtService.sign(payload, { expiresIn: '1d' as any });
+    const accessToken = this.jwtService.sign(payload, {
+      expiresIn: '1d' as any,
+    });
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const refreshToken = this.jwtService.sign(payload, { expiresIn: expiresInString as any });
+    const refreshToken = this.jwtService.sign(payload, {
+      expiresIn: expiresInString as any,
+    });
 
     const user = await this.usersService.findById(userId);
 
