@@ -18,6 +18,8 @@ export class AuthService {
   async login(dto: LoginDto): Promise<AuthResponseDto> {
     const user = await this.usersService.findByEmail(dto.email);
 
+    console.log(user);
+
     if (!user || !user.passwordHash) {
       throw new UnauthorizedException('Invalid email or password');
     }

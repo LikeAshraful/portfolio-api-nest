@@ -60,6 +60,7 @@ let AuthService = class AuthService {
     }
     async login(dto) {
         const user = await this.usersService.findByEmail(dto.email);
+        console.log(user);
         if (!user || !user.passwordHash) {
             throw new common_1.UnauthorizedException('Invalid email or password');
         }
