@@ -19,6 +19,7 @@ import { HealthModule } from './modules/health/health.module';
 import { ProjectsModule } from './modules/projects/projects.module';
 import { SkillsModule } from './modules/skills/skills.module';
 import { UsersModule } from './modules/users/users.module';
+import { AiModule } from './modules/ai/ai.module';
 
 @Module({
   imports: [
@@ -47,6 +48,7 @@ import { UsersModule } from './modules/users/users.module';
     ContactModule,
     AnalyticsModule,
     HealthModule,
+    AiModule,
   ],
   providers: [
     {

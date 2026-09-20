@@ -15,6 +15,9 @@ export declare const envSchema: z.ZodObject<{
     THROTTLE_LIMIT: z.ZodDefault<z.ZodCoercedNumber<unknown>>;
     CORS_ORIGIN: z.ZodDefault<z.ZodString>;
     SWAGGER_ENABLED: z.ZodDefault<z.ZodPipe<z.ZodString, z.ZodTransform<boolean, string>>>;
-}, z.core.$strip>;
+    OPENROUTER_API_KEY: z.ZodOptional<z.ZodString>;
+    OPENROUTER_BASE_URL: z.ZodOptional<z.ZodString>;
+    OPENROUTER_MODEL: z.ZodOptional<z.ZodString>;
+}, z.core.$loose>;
 export type EnvConfig = z.infer<typeof envSchema>;
 export declare function validateEnv(config: Record<string, unknown>): EnvConfig;

@@ -23,6 +23,7 @@ const health_module_1 = require("./modules/health/health.module");
 const projects_module_1 = require("./modules/projects/projects.module");
 const skills_module_1 = require("./modules/skills/skills.module");
 const users_module_1 = require("./modules/users/users.module");
+const ai_module_1 = require("./modules/ai/ai.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -54,6 +55,7 @@ exports.AppModule = AppModule = __decorate([
             contact_module_1.ContactModule,
             analytics_module_1.AnalyticsModule,
             health_module_1.HealthModule,
+            ai_module_1.AiModule,
         ],
         providers: [
             {

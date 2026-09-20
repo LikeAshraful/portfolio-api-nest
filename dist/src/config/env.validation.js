@@ -17,7 +17,10 @@ exports.envSchema = zod_1.z.object({
         .string()
         .transform((val) => val === 'true')
         .default(true),
-});
+    OPENROUTER_API_KEY: zod_1.z.string().optional(),
+    OPENROUTER_BASE_URL: zod_1.z.string().optional(),
+    OPENROUTER_MODEL: zod_1.z.string().optional(),
+}).passthrough();
 function validateEnv(config) {
     const parsed = exports.envSchema.safeParse(config);
     if (!parsed.success) {

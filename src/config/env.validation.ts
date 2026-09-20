@@ -14,7 +14,10 @@ export const envSchema = z.object({
     .string()
     .transform((val) => val === 'true')
     .default(true),
-});
+  OPENROUTER_API_KEY: z.string().optional(),
+  OPENROUTER_BASE_URL: z.string().optional(),
+  OPENROUTER_MODEL: z.string().optional(),
+}).passthrough();
 
 export type EnvConfig = z.infer<typeof envSchema>;
 
